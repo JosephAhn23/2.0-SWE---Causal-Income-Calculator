@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.0 (SWE) - Causal Effect Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #ffffff;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1.1em;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4a9eff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.2em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(74, 158, 255, 0.2);
+            border-radius: 12px;
+            border: 2px solid rgba(74, 158, 255, 0.3);
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .result-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #4a9eff;
+        }
+
+        .timer-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .timer-section h2 {
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .timer-display {
+            font-size: 4em;
+            font-weight: 700;
+            color: #4a9eff;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .timer-controls button {
+            width: auto;
+            min-width: 120px;
+            padding: 14px 28px;
+            font-size: 1.1em;
+        }
+
+        .timer-controls button.stop-btn {
+            background: linear-gradient(135deg, #ff4a4a 0%, #bd3535 100%);
+        }
+
+        .timer-controls button.stop-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 74, 74, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2.0 (SWE)</h1>
+
+        <div class="image-container">
+            <img src="Causation.png" alt="Causation Effect Table">
+        </div>
+
+        <div class="image-container">
+            <img src="Causation (past paper).png" alt="Past Paper Causal Effect">
+        </div>
+
+        <div class="calculator">
+            <h2 style="margin-bottom: 30px; text-align: center;">Calculate Your Causal Effect on Lifetime Income</h2>
+            
+            <form id="calculatorForm">
+                <div class="form-group">
+                    <label for="finals">Number of SWE Final Past Papers Completed:</label>
+                    <input type="number" id="finals" name="finals" min="0" value="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="midterms">Number of SWE Midterm Past Papers Completed:</label>
+                    <input type="number" id="midterms" name="midterms" min="0" value="0" required>
+                </div>
+
+                <button type="submit">Calculate Total Causal Effect</button>
+            </form>
+
+            <div id="result" class="result" style="display: none;">
+                <div class="result-label">Total Causal Effect on Lifetime Income</div>
+                <div class="result-value" id="resultValue">0%</div>
+            </div>
+        </div>
+
+        <div class="timer-section">
+            <h2>Past Finals Timer</h2>
+            <div class="timer-display" id="timerDisplay">00:00:00</div>
+            <div class="timer-controls">
+                <button id="startBtn">Start</button>
+                <button id="stopBtn" class="stop-btn">Stop</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const finals = parseInt(document.getElementById('finals').value) || 0;
+            const midterms = parseInt(document.getElementById('midterms').value) || 0;
+            
+            // Calculate: (finals * 0.4) + (midterms * 0.2)
+            const totalEffect = (finals * 0.4) + (midterms * 0.2);
+            
+            // Display result
+            document.getElementById('resultValue').textContent = totalEffect.toFixed(2) + '%';
+            document.getElementById('result').style.display = 'block';
+        });
+
+        // Auto-calculate on input change
+        document.getElementById('finals').addEventListener('input', calculate);
+        document.getElementById('midterms').addEventListener('input', calculate);
+
+        function calculate() {
+            const finals = parseInt(document.getElementById('finals').value) || 0;
+            const midterms = parseInt(document.getElementById('midterms').value) || 0;
+            
+            const totalEffect = (finals * 0.4) + (midterms * 0.2);
+            
+            document.getElementById('resultValue').textContent = totalEffect.toFixed(2) + '%';
+            document.getElementById('result').style.display = 'block';
+        }
+
+        // Timer functionality
+        let timerInterval = null;
+        let elapsedSeconds = 0;
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            elapsedSeconds++;
+            timerDisplay.textContent = formatTime(elapsedSeconds);
+        }
+
+        startBtn.addEventListener('click', function() {
+            if (timerInterval === null) {
+                timerInterval = setInterval(updateTimer, 1000);
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            }
+        });
+
+        stopBtn.addEventListener('click', function() {
+            if (timerInterval !== null) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        });
+
+        // Initialize stop button as disabled
+        stopBtn.disabled = true;
+    </script>
+</body>
+</html>
